@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Row, Col, Pagination } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Row, Col, Pagination } from 'antd';
 
-import { SearchMovieService } from '../hooks/service';
 import MovieCard from '../components/MovieCard';
 import SearchInput from '../components/SearchInput';
+import { SearchMovieService } from '../hooks/service';
 
 function Home() {
   const [pageNumber, setPageNumber] = useState(1);

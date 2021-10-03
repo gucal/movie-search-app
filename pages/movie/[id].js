@@ -3,6 +3,7 @@ import { Row, Col } from 'antd';
 import Head from 'next/head';
 import Image from 'next/image';
 import { MovieByID } from '../../hooks/service';
+import MovieInfo from '../../components/MovieInfo';
 
 function MovieDetails({ detail }) {
   return (
@@ -21,42 +22,19 @@ function MovieDetails({ detail }) {
         </Col>
         <Col xs={24} lg={12}>
           <Row gutter={[0, 12]}>
-            <Col span={12}>
-              <span>Title:</span>
-            </Col>
-            <Col span={12}>
-              <span>{detail.Title}</span>
-            </Col>
-            <Col span={12}>
-              <span>Year:</span>
-            </Col>
-            <Col span={12}>
-              <span>{detail.Year}</span>
-            </Col>
-            <Col span={12}>
-              <span>Genre:</span>
-            </Col>
-            <Col span={12}>
-              <span>{detail.Genre}</span>
-            </Col>
-            <Col span={12}>
-              <span>Director:</span>
-            </Col>
-            <Col span={12}>
-              <span>{detail.Director}</span>
-            </Col>
-            <Col span={12}>
-              <span>Actors:</span>
-            </Col>
-            <Col span={12}>
-              <span>{detail.Actors}</span>
-            </Col>
-            <Col span={12}>
-              <span>Runtime: </span>
-            </Col>
-            <Col span={12}>
-              <span>{detail.Runtime}</span>
-            </Col>
+            {Object.entries(detail)
+              .filter(
+                (obj) =>
+                  obj[0] == 'Title' ||
+                  obj[0] == 'Year' ||
+                  obj[0] == 'Genre' ||
+                  obj[0] == 'Director' ||
+                  obj[0] == 'Actors' ||
+                  obj[0] == 'Runtime',
+              )
+              .map((i) => (
+                <MovieInfo infoTitle={i[0]} infoValue={i[1]} />
+              ))}
           </Row>
         </Col>
       </Row>
@@ -67,9 +45,9 @@ function MovieDetails({ detail }) {
 export async function getServerSideProps(context) {
   const { id } = context.params;
   const movieInfo = await MovieByID(id);
-  const detail = movieInfo.data;
+  const movieDetail = movieInfo.data;
   return {
-    props: { detail: detail }, // will be passed to the page component as props
+    props: { detail: movieDetail },
   };
 }
 
