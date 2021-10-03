@@ -32,8 +32,12 @@ function MovieDetails({ detail }) {
                   obj[0] == 'Actors' ||
                   obj[0] == 'Runtime',
               )
-              .map((i) => (
-                <MovieInfo infoTitle={i[0]} infoValue={i[1]} />
+              .map((info, index) => (
+                <MovieInfo
+                  key={index}
+                  infoTitle={info[0]}
+                  infoValue={info[1]}
+                />
               ))}
           </Row>
         </Col>
