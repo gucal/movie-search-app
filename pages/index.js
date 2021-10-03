@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Row, Col, Input, Pagination } from 'antd';
-import { getAction } from '../hooks/service';
+import Link from 'next/link';
+import { Row, Col, Pagination } from 'antd';
+
+import { SearchMovieService } from '../hooks/service';
 import MovieCard from '../components/MovieCard';
+import SearchInput from '../components/SearchInput';
 
 function Home() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,7 +16,7 @@ function Home() {
   useEffect(() => {
     if (searchParams.length > 0) {
       const apiCall = setTimeout(() => {
-        getAction(searchParams, pageNumber).then((res) => {
+        SearchMovieService(searchParams, pageNumber).then((res) => {
           setTotalResults(res.data.totalResults);
           setMovieData(res.data.Search);
         });
@@ -26,6 +29,11 @@ function Home() {
     setPageNumber(currentPage);
   };
 
+  const onChangeInputValue = async (value) => {
+    setSearchParams(value);
+    setPageNumber(1);
+  };
+
   return (
     <div className="container">
       <Head>
@@ -33,22 +41,25 @@ function Home() {
       </Head>
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <Input
-            onChange={(e) => {
-              setSearchParams(e.target.value);
-              setPageNumber(1);
-            }}
-            style={{ width: '100%' }}
-          />
+          <SearchInput onChange={onChangeInputValue} />
         </Col>
-        {movieData &&
-          movieData.map((movieInfo, index) => (
-            <Col key={index} xs={24} lg={8}>
-              <MovieCard movieInfo={movieInfo} />
-            </Col>
-          ))}
+        <Col span={24}>
+          <Row gutter={[24, 24]}>
+            {movieData &&
+              movieData.map((movieInfo, index) => (
+                <Col key={index} xs={24} lg={8}>
+                  <Link href={`/movie/${movieInfo.imdbID}`}>
+                    <a>
+                      <MovieCard movieInfo={movieInfo} />
+                    </a>
+                  </Link>
+                </Col>
+              ))}
+          </Row>
+        </Col>
         <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
           <Pagination
+            style={{ display: movieData && movieData.length < 1 && 'none' }}
             current={pageNumber}
             onChange={pageChange}
             showSizeChanger={false}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card } from 'antd';
-import Image from 'next/image';
 
 const { Meta } = Card;
 
@@ -17,7 +16,11 @@ function MovieCard({ movieInfo }) {
         />
       }
     >
-      <Meta title={movieInfo.Title} description="This is the description" />
+      <Meta
+        title={movieInfo.Title}
+        style={{ textAlign: 'center' }}
+        description={movieInfo.Year}
+      />
     </Card>
   );
 }
